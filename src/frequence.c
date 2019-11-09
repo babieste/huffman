@@ -82,15 +82,15 @@ Frequence *remove_unused_chars(Frequence *frequence)
     temp_frequence->occurrences = (int *)malloc(sizeof(int) * used_chars);
     temp_frequence->size = used_chars;
 
-    int inserted_chars = 0;
+    int inserted_values = 0;
     for (int i = 0; i < frequence->size; i++)
     {
         if (frequence->occurrences[i] > 0)
         {
-            temp_frequence->letters[inserted_chars] = frequence->letters[i];
-            temp_frequence->occurrences[inserted_chars] = frequence->occurrences[i];
+            temp_frequence->letters[inserted_values] = frequence->letters[i];
+            temp_frequence->occurrences[inserted_values] = frequence->occurrences[i];
 
-            inserted_chars++;
+            inserted_values++;
         }
     }
 

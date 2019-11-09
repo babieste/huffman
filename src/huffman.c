@@ -5,7 +5,7 @@
 #include "huffman.h"
 
 // The main function that builds Huffman tree
-HeapNode *build_huffman_tree(char data[], int freq[], int size)
+HeapNode *build_huffman_tree(char *data, int *freq, int size)
 {
     HeapNode *left, *right, *top;
 
@@ -76,7 +76,7 @@ void print_code(HeapNode *root, int arr[], int top)
 // The main function that builds a
 // Huffman Tree and print codes by traversing
 // the built Huffman Tree
-void huffman_code(char data[], int freq[], int size)
+void huffman_code(char *data, int *freq, int size)
 {
     // Construct Huffman Tree
     HeapNode *root = build_huffman_tree(data, freq, size);

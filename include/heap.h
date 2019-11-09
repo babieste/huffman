@@ -29,7 +29,7 @@ HeapNode *extract_min(MinHeap *min_heap);
 void insert_heap(MinHeap *min_heap, HeapNode *node);
 void build_min_heap(MinHeap *min_heap);
 bool is_leaf(HeapNode *root);
-MinHeap *create_and_build_min_heap(char data[], int freq[], int size);
+MinHeap *create_and_build_min_heap(char *data, int *freq, int size);
 void print_array(int arr[], int n);
 
 #endif

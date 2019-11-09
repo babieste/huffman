@@ -141,7 +141,7 @@ bool is_leaf(HeapNode *root)
  * all character of data[] in min heap. Initially size of 
  * min heap is equal to capacity
 */
-MinHeap *create_and_build_min_heap(char data[], int freq[], int size)
+MinHeap *create_and_build_min_heap(char *data, int *freq, int size)
 {
 
     MinHeap *minHeap = create_min_heap(size);
