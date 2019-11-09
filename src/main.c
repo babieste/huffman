@@ -3,6 +3,7 @@
 
 #include "heap.h"
 #include "huffman.h"
+#include "frequence.h"
 
 int main()
 {
@@ -24,12 +25,23 @@ int main()
     https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
    */
 
-    char arr[] = {'a', 'b', 'c', 'd', 'e', 'f'};
-    int freq[] = {5, 9, 12, 13, 16, 45};
+    // char arr[] = {'a', 'b', 'c', 'd', 'e', 'f'};
+    // int freq[] = {12, 5, 9, 12, 16, 45};
 
-    int size = sizeof(arr) / sizeof(arr[0]);
 
-    huffman_code(arr, freq, size);
+
+    // int size = sizeof(arr) / sizeof(arr[0]);
+
+    // huffman_code(arr, freq, size);
+
+    char value[] = "aaabbbcc";
+    Frequence *chars_frequence = frequence(value);
+
+    print_frequence(chars_frequence);
+
+    // huffman_code(chars_frequence->letters, chars_frequence->occurrences, ASCII_CHARS);
+
+    free_frequence(chars_frequence);
 
     return 0;
 }

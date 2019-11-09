@@ -4,7 +4,7 @@ BIN_DIR=bin
 SRC_DIR=src
 BIN_NAME=huffman
 
-SRC_FILES=$(SRC_DIR)/heap.c $(SRC_DIR)/huffman.c $(SRC_DIR)/main.c
+SRC_FILES=$(SRC_DIR)/frequence.c $(SRC_DIR)/heap.c $(SRC_DIR)/huffman.c $(SRC_DIR)/main.c
 
 all:
 	mkdir -p bin
@@ -21,3 +21,7 @@ clean:
 
 run:
 	./$(BIN_DIR)/$(BIN_NAME)
+
+debug:
+	mkdir -p bin
+	$(CC) $(CFLAGS) -g $(SRC_FILES) -o bin/$(BIN_NAME)
