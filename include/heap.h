@@ -1,32 +1,35 @@
 #ifndef MIN_HEAP_H
 #define MIN_HEAP_H
 
+#include <stdbool.h>
+
 // A Huffman tree node
-struct MinHeapNode
+typedef struct HeapNode
 {
     char data;
-    unsigned freq;
-    struct MinHeapNode *left, *right;
-};
+    unsigned int freq;
+    struct HeapNode *left, *right;
+} HeapNode;
 
 // A Min Heap:  Collection of
 // min-heap (or Huffman tree) nodes
-struct MinHeap
+typedef struct
 {
-    unsigned size;
-    unsigned capacity;
-    struct MinHeapNode **array;
-};
+    unsigned int size;
+    unsigned int capacity;
+    struct HeapNode **array;
+} MinHeap;
 
-struct MinHeapNode *newNode(char data, unsigned freq);
-struct MinHeap *createMinHeap(unsigned capacity);
-void swapMinHeapNode(struct MinHeapNode **a, struct MinHeapNode **b);
-void minHeapify(struct MinHeap *minHeap, int idx);
-int isSizeOne(struct MinHeap *minHeap);
-struct MinHeapNode *extractMin(struct MinHeap *minHeap);
-void insertMinHeap(struct MinHeap *minHeap, struct MinHeapNode *minHeapNode);
-void buildMinHeap(struct MinHeap *minHeap);
-int isLeaf(struct MinHeapNode *root);
-struct MinHeap *createAndBuildMinHeap(char data[], int freq[], int size);
+HeapNode *new_node(char data, unsigned int freq);
+MinHeap *create_min_heap(unsigned capacity);
+void swap_min_heap_node(HeapNode **a, HeapNode **b);
+void heapify(MinHeap *min_heap, int idx);
+bool size_one(MinHeap *min_heap);
+HeapNode *extract_min(MinHeap *min_heap);
+void insert_heap(MinHeap *min_heap, HeapNode *node);
+void build_min_heap(MinHeap *min_heap);
+bool is_leaf(HeapNode *root);
+MinHeap *create_and_build_min_heap(char data[], int freq[], int size);
+void print_array(int arr[], int n);
 
 #endif

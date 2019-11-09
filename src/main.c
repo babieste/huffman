@@ -18,7 +18,7 @@ int main()
     Second step: file management and stuff, later
     */
 
-   /*
+    /*
     Algorithms using a min heap as a way to extract the nodes with
     the least frequency and build the tree from there:
     https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
@@ -29,7 +29,7 @@ int main()
 
     int size = sizeof(arr) / sizeof(arr[0]);
 
-    HuffmanCodes(arr, freq, size);
+    huffman_code(arr, freq, size);
 
     return 0;
 }

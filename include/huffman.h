@@ -5,8 +5,8 @@
 // calculating height of Huffman Tree
 #define MAX_TREE_HT 100
 
-struct MinHeapNode *buildHuffmanTree(char data[], int freq[], int size);
-void printCodes(struct MinHeapNode *root, int arr[], int top);
-void HuffmanCodes(char data[], int freq[], int size);
+HeapNode *build_huffman_tree(char data[], int freq[], int size);
+void print_code(HeapNode *root, int arr[], int top);
+void huffman_code(char data[], int freq[], int size);
 
 #endif
