@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
+#include "stringutils.h"
 #include "heap.h"
 #include "huffman.h"
 
@@ -43,23 +45,58 @@ HeapNode *build_huffman_tree(char *data, int *freq, int size)
     return extract_min(minHeap);
 }
 
-// Prints huffman codes from the root of Huffman Tree.
-// It uses arr[] to store codes
-void print_code(HeapNode *root, int arr[], int top)
-
+/**
+ * Initialize the structure in order to store a 
+ * list of huffman code for each character
+ * 
+*/
+HuffmanCode **init_code(int size)
 {
+    HuffmanCode **code = (HuffmanCode **)malloc(sizeof(HuffmanCode *) * size);
+    if (code == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < size; i++)
+    {
+        HuffmanCode *char_code = (HuffmanCode *) malloc (sizeof(HuffmanCode));
+        if (char_code == NULL){
+            exit(EXIT_FAILURE);
+        }
+
+        //just some random values to fill in the space
+        char_code->code = "0";
+        char_code->character = '0';
+
+        code[i] = char_code;
+    }
+
+    return code;
+}
+
+/**
+ * Retrieve the values from the root node, traversing the tree
+*/
+void traverse_huffman_tree(
+    HeapNode *root, char *current_code, 
+    HuffmanCode **code, int *current_char)
+{
+    char *left = "0";
+    char *right = "1";
+
     // Assign 0 to left edge and recur
     if (root->left)
     {
-        arr[top] = 0;
-        print_code(root->left, arr, top + 1);
+        char *new_current_code = concat(current_code, left);
+        traverse_huffman_tree(root->left, new_current_code, code, current_char);
     }
 
     // Assign 1 to right edge and recur
     if (root->right)
     {
-        arr[top] = 1;
-        print_code(root->right, arr, top + 1);
+        char *new_current_code = concat(current_code, right);
+        traverse_huffman_tree(root->right, new_current_code, code, current_char);
     }
 
     // If this is a leaf node, then
@@ -68,22 +105,39 @@ void print_code(HeapNode *root, int arr[], int top)
     // and its code from arr[]
     if (is_leaf(root))
     {
-        printf("%c: ", root->data);
-        print_array(arr, top);
+        code[*current_char]->character = root->data;
+        code[*current_char]->code = current_code;
+
+        (*current_char)++;
     }
 }
 
-// The main function that builds a
-// Huffman Tree and print codes by traversing
-// the built Huffman Tree
-void huffman_code(char *data, int *freq, int size)
+/**
+ * Builds the huffman tree and print the codes by 
+ * traversing the built huffman tree
+ **/
+HuffmanCode **huffman_code(char *data, int *freq, int size)
 {
     // Construct Huffman Tree
     HeapNode *root = build_huffman_tree(data, freq, size);
 
-    // Print Huffman codes using
-    // the Huffman tree built above
-    int arr[MAX_TREE_HT], top = 0;
+    HuffmanCode **result_code = init_code(size);
 
-    print_code(root, arr, top);
+    int current_char = 0;
+    char *initial_char = "";
+
+    traverse_huffman_tree(root, initial_char, result_code, &current_char);
+
+    return result_code;
+}
+
+void free_huffman_code (HuffmanCode ** code, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        free(code[i]->code);
+        free(code[i]);
+    }
+
+    free(code);
 }

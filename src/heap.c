@@ -79,7 +79,6 @@ bool size_one(MinHeap *minHeap)
  * Extract the node from min_heap with the lowest value
  * Used when building huffman tree and fusing two different values
  * into one
- * 
 */
 HeapNode *extract_min(MinHeap *min_heap)
 {
