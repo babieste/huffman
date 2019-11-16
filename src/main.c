@@ -21,6 +21,13 @@ int main()
 {
 
     /*
+        Membros do Grupo:
+        Barbara Este Fernandez - 31937039
+        Daniel Dias de Lima - 31687679
+        Lucas Morita da Nova - 31826199
+    */
+
+    /*
     First step: receive any string - DONE
     Calculate the frequency of all characters - DONE
     Build, in memory, the huffman tree - DONE
@@ -49,19 +56,7 @@ int main()
     char *encodedString = malloc(chars_frequence->size * sizeof(char));
     
     encode(result, value, chars_frequence->size);
-    // for (int i = 0; i < strlen(value); i++) 
-    // {
-        
-    //     int j = 0;
-    //     while (result[j]->character != value[i])
-    //     {
-    //         printf("res and val: %c    %c\n",result[j]->character, value[i]);
-    //         j++;
-    //     }
 
-    //     printf("ACHEI AQUI: %c É %c\n", result[j]->character, value[i]);
-    //     printf("PROXIMO I DO FOR\n\n");
-    // }
 
 
     free_huffman_code(result, chars_frequence->size);
