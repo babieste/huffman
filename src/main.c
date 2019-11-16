@@ -5,13 +5,16 @@
 #include "heap.h"
 #include "huffman.h"
 #include "frequence.h"
+#include "stringutils.h"
 
 void print_huffman_code (HuffmanCode **code, int size)
 {
+    printf("-------------- Huffman Code --------------\n");
     for (int i = 0; i < size; i++)
     {
         printf("Character: %c, code = %s\n", code[i]->character, code[i]->code);
     }
+    printf("------------------------------------------\n\n");
 }
 
 int main()
@@ -41,6 +44,25 @@ int main()
 
     print_frequence(chars_frequence);
     print_huffman_code(result, chars_frequence->size);
+    
+    
+    char *encodedString = malloc(chars_frequence->size * sizeof(char));
+    
+    encode(result, value, chars_frequence->size);
+    // for (int i = 0; i < strlen(value); i++) 
+    // {
+        
+    //     int j = 0;
+    //     while (result[j]->character != value[i])
+    //     {
+    //         printf("res and val: %c    %c\n",result[j]->character, value[i]);
+    //         j++;
+    //     }
+
+    //     printf("ACHEI AQUI: %c É %c\n", result[j]->character, value[i]);
+    //     printf("PROXIMO I DO FOR\n\n");
+    // }
+
 
     free_huffman_code(result, chars_frequence->size);
     free_frequence(chars_frequence);

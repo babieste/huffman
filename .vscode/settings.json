@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "stringutils.h": "c",
+        "string.h": "c",
+        "huffman.h": "c"
+    }
+}

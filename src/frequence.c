@@ -5,10 +5,12 @@
 
 void print_frequence(Frequence *frequence)
 {
+    printf("-------------- Frequence --------------\n");
     for (int i = 0; i < frequence->size; i++)
     {
         printf("%c - %d\n", frequence->letters[i], frequence->occurrences[i]);
     }
+    printf("---------------------------------------\n\n");
 }
 
 /**
