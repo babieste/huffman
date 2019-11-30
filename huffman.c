@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 
 #define ALPHABET "abcdefghijklmnopqrstuvxyz"
@@ -40,15 +41,54 @@ void display_frequency_table(node table[]) {
     }
 }
 
-huffmanNode *create_huffman_node(node char_node) {
+void display_huffman_nodes(huffmanNode *array[], int size) {
+	int i;
+	for(i = 0; i < size; i++) {
+		printf("\n-------");
+		if(array[i]->frequency == -1) printf("\nZERO!");
+		printf("\nchar \"%c\" - frequency = %f", array[i]->character, array[i]->frequency);
+	}
+}
+
+huffmanNode *create_huffman_node(char character, float frequency) {
 	huffmanNode *huffNode = malloc(sizeof(huffmanNode));
 	
-	huffNode->character = char_node.character;
-	huffNode->frequency = char_node.frequency;
+	huffNode->character = character;
+	huffNode->frequency = frequency;
 	huffNode->left = huffNode->right = NULL;
 	
 	return huffNode;
 }
+
+huffmanNode *extract_min(huffmanNode *array[], int size) {
+	huffmanNode *huffMinNode = malloc(sizeof(huffmanNode));
+	int i;
+	
+	// Create a Huffman node with frequency equals to one hundred
+	// to start the comparison
+	huffMinNode = create_huffman_node('$', 100);
+	
+	for(i = 0; i < size; i++) {
+		if(array[i]->frequency < huffMinNode->frequency) {
+			huffMinNode = array[i];
+			
+			// I's necessary to indicate somehow
+			// that the node with the min frequency
+			// is removed from the Huffman tree,
+			// since it's been added to the min Heap...
+			array[i]->frequency = -1; // Não sei se '-1' funciona corretamente
+		}
+	}
+	
+	return huffMinNode;
+}
+
+//void insert(huffmanNode huffNode, huffmanNode *array[]) {
+//	int i;
+// do {
+//
+// } while();
+//}
 
 /*
     Initializes a frequency table with all the alphabet characters
@@ -95,6 +135,7 @@ void read_file(FILE *file, node table[]) {
 
 void build_huffman_tree(node table[]) {
 	huffmanTree *tree = malloc(sizeof(huffmanTree));
+	huffmanNode *z;
 	// We can filter the characters table to build the heap nodes
 	// to those characters that were counted in the input.
 	// Firstly, we calculate 'n', which is the amout of leaf nodes
@@ -106,20 +147,27 @@ void build_huffman_tree(node table[]) {
 		}
 	}
 	
-	tree->size = n;
-	
 	for(i = 0; i < ALPHABET_LENGTH; i++) {
 		if(table[i].char_counter != 0) {
 			// Build a new huffman node based on table character data
 			// and add that node to the tree
-			tree->array[j] = create_huffman_node(table[i]);
+			tree->array[j] = create_huffman_node(table[i].character, table[i].frequency);
 			j = j + 1;
 		}
 	}
 	
-	// Extract min node from tree...
+	for(i = 0; i < n; i++) {
+		z = malloc(sizeof(huffmanNode));
+		z = create_huffman_node('$', 0);
+		z->left = extract_min(tree->array, n);
+		z->right = extract_min(tree->array, n);
+		
+		// Insert the new node 'z' in the tree...
+		
+		free(z);
+	}
 	
-	
+	display_huffman_nodes(tree->array, n);
 	
 }
 
@@ -134,6 +182,8 @@ int main() {
 
     init_frequency_table(char_table);
     read_file(in, char_table);
-    display_frequency_table(char_table);
+  	display_frequency_table(char_table);
+    printf("\n\n\n");
+    build_huffman_tree(char_table);
     return 0;
 }
