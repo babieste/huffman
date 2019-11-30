@@ -15,7 +15,6 @@ typedef struct
 {
     char character;
     int char_counter;
-    float frequency;
 } node;
 
 /*
@@ -24,7 +23,7 @@ typedef struct
 typedef struct huffmanNode
 {
     char character;
-    float frequency;
+    int frequency;
     bool enabled; /*used to indicate wether a node has been removed when extracting the min node*/
     struct huffmanNode *left;
     struct huffmanNode *right;
@@ -45,7 +44,7 @@ void display_frequency_table(node table[])
     for (i = 0; i < ALPHABET_LENGTH; i++)
     {
         printf("\n--------");
-        printf("\nchar \"%c\" - char_counter = %d - char frequency = %f", table[i].character, table[i].char_counter, table[i].frequency);
+        printf("\nchar \"%c\" - char_counter = %d", table[i].character, table[i].char_counter);
     }
 }
 
@@ -57,7 +56,7 @@ void display_huffman_nodes(huffmanNode *array[], int size)
         printf("\n-------");
         if (array[i]->frequency == -1)
             printf("\nZERO!");
-        printf("\nchar \"%c\" - frequency = %f", array[i]->character, array[i]->frequency);
+        printf("\nchar \"%c\" - frequency = %d", array[i]->character, array[i]->frequency);
     }
 }
 
@@ -146,18 +145,10 @@ void read_file(FILE *file, node table[])
             for (i = 0; i < ALPHABET_LENGTH; i++)
             {
                 if (c == table[i].character)
-                {
                     table[i].char_counter = table[i].char_counter + 1;
-                }
+                
             }
         }
-    }
-
-    // Now we can calculate the frequency of each letter in the text
-    for (i = 0; i < ALPHABET_LENGTH; i++)
-    {
-        float freq = (float)((float)table[i].char_counter / (float)letter_counter) * 100;
-        table[i].frequency = table[i].char_counter;
     }
 }
 
@@ -211,7 +202,7 @@ huffmanTree *buildFromCharactersTable(node table[])
         {
             // Build a new huffman node based on table character data
             // and add that node to the tree
-            tree->array[j++] = create_huffman_node(table[i].character, table[i].frequency);
+            tree->array[j++] = create_huffman_node(table[i].character, table[i].char_counter);
         }
     }
 
