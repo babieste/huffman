@@ -5,13 +5,14 @@
 #include <ctype.h>
 #include <float.h>
 
+
 #define ALPHABET "abcdefghijklmnopqrstuvwxyz"
 #define ALPHABET_LENGTH 26
 
 /*
 	This struct represents each character in the frequency table
 */
-typedef struct
+typedef struct 
 {
     char character;
     int char_counter;
@@ -20,58 +21,97 @@ typedef struct
 /*
 	This struct represents each node in the Huffman tree
 */
-typedef struct huffmanNode
+typedef struct huffmanNode 
 {
-    char character;
-    int frequency;
-    bool enabled; /*used to indicate wether a node has been removed when extracting the min node*/
-    struct huffmanNode *left;
-    struct huffmanNode *right;
+	char character;
+	int frequency;
+	bool enabled; /*used to indicate wether a node has been removed when extracting the min node*/
+	struct huffmanNode *left;
+	struct huffmanNode *right;
 } huffmanNode;
 
 /*
 	This struct represents the Huffman tree
 */
-typedef struct
+typedef struct 
 {
-    int size;
-    huffmanNode **array;
+	int size;
+	huffmanNode **array;
 } huffmanTree;
 
-void display_frequency_table(node table[])
+typedef struct Map {
+	char character;
+	char *codigo;
+	struct Map *nextMap;
+} Map;
+
+void insereNoFim(Map *map, char c, char *codificado) {
+	Map *novoNo = malloc(sizeof(Map));
+	novoNo->character = c;
+	novoNo->codigo = codificado;
+	novoNo->nextMap = NULL;
+	if (map == NULL) {
+		map = novoNo;
+		return;
+	}
+
+	// percorre a lista ate' o fim
+	for(; map->nextMap == NULL; map = map->nextMap);
+	map->nextMap = novoNo;
+}
+
+/**
+ * stringASerExpandida - string base que vai ser colocada todo char codificado
+ * stringASerColocada - char que foi codificado e vai ser acrescentado `a stringASerExpandida
+ */
+char *concatenaStringsCodificadas(char *stringASerExpandida, char *stringASerColocada) {
+	char* finalString = malloc(strlen(stringASerExpandida) + strlen(stringASerColocada) + 1);
+	strcat(finalString, stringASerExpandida);
+	strcat(finalString, stringASerColocada);
+	return finalString;
+}
+
+void codificaString(huffmanTree *tree, char *str) 
+{
+	for (int i = 0; i < tree->size; i++)
+		tree->array[i]->character;
+	
+}
+
+void display_frequency_table(node table[]) 
 {
     int i;
-    for (i = 0; i < ALPHABET_LENGTH; i++)
-    {
+    for (i = 0; i < ALPHABET_LENGTH; i++) 
+	{
         printf("\n--------");
         printf("\nchar \"%c\" - char_counter = %d", table[i].character, table[i].char_counter);
     }
 }
 
-void display_huffman_nodes(huffmanNode *array[], int size)
+void display_huffman_nodes(huffmanNode *array[], int size) 
 {
-    int i;
-    for (i = 0; i < size; i++)
-    {
-        printf("\n-------");
-        if (array[i]->frequency == -1)
-            printf("\nZERO!");
-        printf("\nchar \"%c\" - frequency = %d", array[i]->character, array[i]->frequency);
-    }
+	int i;
+	for (i = 0; i < size; i++) 
+	{
+		printf("\n-------");
+		if (array[i]->frequency == -1) 
+			printf("\nZERO!");
+		printf("\nchar \"%c\" - frequency = %d", array[i]->character, array[i]->frequency);
+	}
 }
 
-huffmanNode *create_huffman_node(char character, float frequency)
+huffmanNode *create_huffman_node(char character, float frequency) 
 {
 
-    huffmanNode *huffNode = malloc(sizeof(huffmanNode));
-
-    huffNode->character = character;
-    huffNode->frequency = frequency;
-    huffNode->left = NULL;
+	huffmanNode *huffNode = malloc(sizeof(huffmanNode));
+	
+	huffNode->character = character;
+	huffNode->frequency = frequency;
+	huffNode->left = NULL;
     huffNode->right = NULL;
     huffNode->enabled = true;
-
-    return huffNode;
+	
+	return huffNode;
 }
 
 /**
@@ -80,44 +120,44 @@ huffmanNode *create_huffman_node(char character, float frequency)
  * more nodes to extract from tree
  * 
 */
-huffmanNode *extract_min(huffmanTree *tree)
+huffmanNode *extract_min(huffmanTree *tree) 
 {
 
-    if (tree->size == 0)
+	if (tree->size == 0)
         return NULL; //avoids null pointers in case size is 0
 
     int i;
     float minFrequency = FLT_MAX;
     huffmanNode *huffMinNode = NULL;
-
-    for (i = 0; i < tree->size; i++)
-    {
-        huffmanNode *current = tree->array[i];
+	
+	for (i = 0; i < tree->size; i++) 
+	{
+		huffmanNode *current = tree->array[i];
         if (current->frequency < minFrequency && current->enabled)
         {
             huffMinNode = tree->array[i];
             minFrequency = huffMinNode->frequency;
         }
-    }
-
-    if (huffMinNode == NULL)
+	}
+	
+	    if (huffMinNode == NULL)
         return NULL; //no more nodes to extract
 
     //disabling for next interation, this node will be
     //used when "fusing" the next node on huffman tree
     huffMinNode->enabled = false;
-    return huffMinNode;
+	return huffMinNode;
 }
 
 /*
     Initializes a frequency table with all the alphabet characters
     and it's counters to 0
 */
-void init_frequency_table(node table[])
+void init_frequency_table(node table[]) 
 {
     int i;
-    for (i = 0; i < ALPHABET_LENGTH; i++)
-    {
+    for (i = 0; i < ALPHABET_LENGTH; i++) 
+	{
         table[i].character = ALPHABET[i];
         table[i].char_counter = 0;
     }
@@ -127,7 +167,7 @@ void init_frequency_table(node table[])
     Reads the given file and updates the character table with each
     alphabet character occurence and frequency.
 */
-void read_file(FILE *file, node table[])
+void read_file(FILE *file, node table[]) 
 {
     char c;
     int i, letter_counter;
@@ -135,16 +175,16 @@ void read_file(FILE *file, node table[])
     fseek(file, 0, SEEK_SET);
 
     letter_counter = 0;
-    while ((c = fgetc(file)) != EOF)
-    {
-        if (c != ' ' && c != '.' && c != '\n')
-        {
+    while ((c = fgetc(file)) != EOF) 
+	{
+        if (c != ' ' && c != '.' && c != '\n') 
+		{
             c = tolower(c);
             letter_counter = letter_counter + 1;
 
-            for (i = 0; i < ALPHABET_LENGTH; i++)
-            {
-                if (c == table[i].character)
+            for (i = 0; i < ALPHABET_LENGTH; i++) 
+			{
+                if (c == table[i].character) 
                     table[i].char_counter = table[i].char_counter + 1;
                 
             }
@@ -169,7 +209,7 @@ void freeHuffmanTree(huffmanTree *tree)
 
 huffmanTree *createHuffmanTree(int size)
 {
-    huffmanTree *tree = (huffmanTree *)malloc(sizeof(huffmanTree));
+	huffmanTree *tree = (huffmanTree *)malloc(sizeof(huffmanTree));
     tree->array = (huffmanNode **)malloc(sizeof(huffmanNode *) * size);
     for (int i = 0; i < size; i++)
         tree->array[i] = NULL;
@@ -261,20 +301,20 @@ void build_huffman_tree(node table[])
     display_huffman_nodes(tree->array, tree->size);
 }
 
-int main()
+int main() 
 {
     FILE *in = fopen("in.txt", "r");
     node char_table[26];
 
-    if (in == NULL)
-    {
+    if (in == NULL) 
+	{
         printf("\nError reading file.");
         exit(EXIT_FAILURE);
     }
 
     init_frequency_table(char_table);
     read_file(in, char_table);
-    display_frequency_table(char_table);
+  	display_frequency_table(char_table);
     printf("\n\n\n");
     build_huffman_tree(char_table);
     exit(EXIT_SUCCESS);
