@@ -7,6 +7,10 @@
 
 #define ALPHABET "abcdefghijklmnopqrstuvwxyz"
 #define ALPHABET_LENGTH 26
+#define LEFT "0"
+#define RIGHT "1"
+#define NOT_INITIALIZED_CODE "NOT_INITIALIZED"
+#define NOT_INITIALIZED_CHAR 'X'
 
 /*
 	This struct represents each character in the frequency table
@@ -37,6 +41,17 @@ typedef struct
     int size;
     huffmanNode **array;
 } huffmanTree;
+
+/**
+ * This struct represents the code value of 
+ * the each character on the sequence
+ * 
+*/
+typedef struct
+{
+    char *code;
+    char character;
+} huffmanCode;
 
 void display_frequency_table(node table[])
 {
@@ -237,7 +252,7 @@ huffmanTree *buildFromPreviousTreeAndFusedNode(huffmanTree *tree, huffmanNode *f
     return newTree;
 }
 
-void build_huffman_tree(node table[])
+huffmanTree* build_huffman_tree(node table[])
 {
     huffmanTree *tree = buildFromCharactersTable(table);
 
@@ -258,8 +273,131 @@ void build_huffman_tree(node table[])
         tree = buildFromPreviousTreeAndFusedNode(tree, fused);
     }
 
-    display_huffman_nodes(tree->array, tree->size);
+
+    return tree;
 }
+
+char *concat(const char *s1, const char *s2)
+{
+    char *result = (char *)malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
+
+    if (result == NULL)
+    {
+        // strerror("Error while concatening strings");
+        exit(EXIT_FAILURE);
+    }
+
+    strcpy(result, s1);
+    strcat(result, s2);
+    return result;
+}
+
+/**
+ * Initialize the structure in order to store a 
+ * list of huffman code for each character
+ * 
+*/
+huffmanCode **init_code(int size)
+{
+    huffmanCode **code = (huffmanCode **)malloc(sizeof(huffmanCode *) * size);
+    if (code == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < size; i++)
+    {
+        huffmanCode *char_code = (huffmanCode *) malloc (sizeof(huffmanCode));
+        if (char_code == NULL){
+            exit(EXIT_FAILURE);
+        }
+
+        //just some random values to fill in the space
+        char_code->code = NOT_INITIALIZED_CODE;
+        char_code->character = NOT_INITIALIZED_CHAR;
+
+        code[i] = char_code;
+    }
+
+    return code;
+}
+
+/**
+ * Responsible for going throught every 
+ * single node on the huffman three. The result will
+ * be the huffman code for every single character on that
+ * tree
+ * 
+ * void because the result is "persisted" onto the pointers
+ * passed as parameters
+ * 
+*/
+void traverse_tree(
+huffmanNode *root, char *current_code, 
+huffmanCode **code, int *current_char)
+{
+
+    //there is a node to the left
+    //making recursing and adding the piece of string related to LEFT
+    if (root->left != NULL)
+    {
+        char *new_current_code = concat(current_code, LEFT);
+        traverse_tree(root->left, new_current_code, code, current_char);
+    }
+
+    //there is a node to the right
+    //making recursing and adding the piece of string related to LEFT
+    if (root->right != NULL)
+    {
+        char *new_current_code = concat(current_code, RIGHT);
+        traverse_tree(root->right, new_current_code, code, current_char);
+    }
+
+    // leaf node, just saving the final 
+    // results onto the struct
+    if (root->left == NULL && root->right == NULL)
+    {
+        code[*current_char]->character = root->character;
+        code[*current_char]->code = current_code;
+
+        (*current_char)++;
+    }
+}
+
+huffmanCode **calculatedHuffmanCode(node char_table[])
+{
+    // building huffman tree
+    // result will be an array on a single position
+    huffmanTree *tree = build_huffman_tree(char_table);
+
+    huffmanCode **result_code = init_code(ALPHABET_LENGTH);
+
+    //our result will be an array, and because we are using pointers, 
+    //we can use this variable to tell at what 
+    //index the result will be associated to 
+    int current_char = 0; 
+
+    //empty string; result will be concatenated for every iteration
+    char *initial_char = ""; 
+
+    //result of huffman tree is an array of a single position
+    //with a node "containing" all the other characters
+    //hence "array[0]"
+    traverse_tree(tree->array[0], initial_char, result_code, &current_char);
+
+    return result_code;
+}
+
+void print_huffman_code (huffmanCode **code, int size)
+{
+    printf("-------------- Huffman Code --------------\n");
+    for (int i = 0; i < size; i++)
+    {
+        printf("Character: %c, code = %s\n", code[i]->character, code[i]->code);
+    }
+    printf("------------------------------------------\n\n");
+}
+
 
 int main()
 {
@@ -275,7 +413,7 @@ int main()
     init_frequency_table(char_table);
     read_file(in, char_table);
     display_frequency_table(char_table);
-    printf("\n\n\n");
-    build_huffman_tree(char_table);
-    exit(EXIT_SUCCESS);
+    
+    huffmanCode **resultingCode = calculatedHuffmanCode(char_table);
+    print_huffman_code(resultingCode, ALPHABET_LENGTH);
 }
